@@ -19,7 +19,9 @@ CONTRIBUTING.md
 .gitignore
 .env.example
 init_project.py
+init_ml_directories.py
 GITHUB_SETUP.md
+ML_MODEL_INTEGRATION.md
 download_project.sh
 EOL
 
