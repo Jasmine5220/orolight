@@ -1,1 +1,41 @@
-<!DOCTYPE html><html><head><title>Medical Imaging App</title></head><body><h1>Medical Imaging App</h1><p>Welcome to the Medical Imaging Application!</p></body></html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Medical Imaging App</h1>
+    <p class="lead">Welcome to the Medical Imaging Application!</p>
+    <hr class="my-4">
+    <p>This platform helps medical professionals analyze and detect cancer in medical images using advanced machine learning algorithms.</p>
+    <div class="mt-4">
+        <a href="{{ url_for('login') }}" class="btn btn-primary me-2">Login</a>
+        <a href="{{ url_for('register') }}" class="btn btn-secondary">Register</a>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Upload Images</h5>
+                <p class="card-text">Upload medical images for automatic analysis and cancer detection.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Instant Analysis</h5>
+                <p class="card-text">Get immediate results with confidence scores and visual heatmaps.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">History Tracking</h5>
+                <p class="card-text">View all your previous uploads and analysis results in one place.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
