@@ -86,8 +86,21 @@ A medical imaging application with a React Native mobile app and Flask backend t
 This application is designed to integrate with a custom machine learning model for cancer detection in medical images. To add your model:
 
 1. Place your trained model file (`.h5` format) in the `model/` directory as `best_model.h5`
-2. Modify `backend/utils.py` to replace the placeholder functions with your actual model loading and prediction code
-3. Update the image preprocessing functions to match your model's requirements
+2. Install the required ML packages:
+   ```
+   pip install tensorflow opencv-python matplotlib
+   ```
+3. Update `backend/utils.py` by uncommenting and modifying the code sections marked with comments. The file already contains commented versions of:
+   - Model loading with TensorFlow
+   - Image preprocessing for Inception-ResNet-V2
+   - Prediction function for binary classification
+   - Grad-CAM visualization generation
+
+4. The application already has the configuration set up in `backend/config.py`:
+   - `MODEL_PATH = "model/best_model.h5"`
+   - `CLASS_LABELS = ["Non-Cancer", "Cancer"]`
+
+You can modify these settings as needed for your specific model.
 
 ## API Endpoints
 
