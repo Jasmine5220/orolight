@@ -1,0 +1,26 @@
+# Flask and extensions
+flask==2.2.3
+flask-sqlalchemy==3.0.3
+flask-jwt-extended==4.4.4
+flask-login==0.6.2
+flask-wtf==1.1.1
+email-validator==2.0.0
+
+# Database
+psycopg2-binary==2.9.6
+SQLAlchemy==2.0.6
+
+# Web server
+gunicorn==23.0.0
+werkzeug==2.2.3
+
+# Data processing
+numpy==1.24.2
+
+# For production deployment
+python-dotenv==1.0.0
+
+# ML dependencies (commented - uncomment when adding model)
+# tensorflow==2.12.0
+# opencv-python==4.7.0.72
+# matplotlib==3.7.1
