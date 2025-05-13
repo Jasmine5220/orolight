@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OroLight – Early Detection for All</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="orolight-hero">
+      <div class="hero-row">
+        <div class="hero-logo-block">
+          <img
+            src="{{ url_for('static', filename='heading.png') }}"
+            alt="OroLight Logo"
+            class="hero-heading-img"
+          />
+          <p class="orolight-tagline">Early Detection for All</p>
+          <span class="orolight-dfp">DFP - 24</span>
+        </div>
+        <div class="hero-device">
+          <img
+            src="{{ url_for('static', filename='device.jpg') }}"
+            alt="OroLight Device"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Camera Preview Section -->
+      <div class="camera-preview" id="camera-section">
+        <video id="camera-feed" autoplay playsinline></video>
+        <canvas id="capture-canvas" style="display: none"></canvas>
+        <div id="camera-buttons">
+          <button id="capture-btn" class="capture-button">Capture Image</button>
+        </div>
+      </div>
+
+      <!-- Analyze Form for Captured Image -->
+      <form
+        id="analyze-form"
+        action="/"
+        method="post"
+        enctype="multipart/form-data"
+        style="display: none; text-align: center"
+      >
+        <input type="hidden" name="captured_image" id="captured-image" />
+        <button type="submit" class="upload-btn">Analyze Now</button>
+        <button type="button" id="retake-btn" class="retake-btn">Retake</button>
+      </form>
+
+      <!-- File Upload Form -->
+      <form
+        id="uploadForm"
+        action="/"
+        method="post"
+        enctype="multipart/form-data"
+        class="upload-form"
+      >
+        <div class="file-input-group">
+          <label class="file-label" for="file-input">
+            <input
+              type="file"
+              id="file-input"
+              name="file"
+              accept="image/*"
+              style="display: none"
+            />
+            <span>Upload Image</span>
+          </label>
+        </div>
+        <button type="submit" class="upload-btn" disabled id="predict-btn">
+          Upload & Predict
+        </button>
+      </form>
+
+      {% if filename %}
+      <div class="results-card">
+        <h2 class="result-title">
+          Prediction:
+          <span
+            class="{{ 'cancer' if prediction == 'Cancer' else 'non-cancer' }}"
+          >
+            {{ prediction }}
+          </span>
+        </h2>
+
+        <p class="confidence">
+          Confidence:
+          <strong>{{ (confidence * 100 * 100) | round(2) }}</strong>
+        </p>
+
+        {% set confidence_percent = confidence * 100 * 100 %} 
+        {% if confidence_percent < 40 %}
+        <p style="color: #d9534f; font-weight: 500; margin-top: 8px">
+          ⚠️ Unable to predict confidently. Please recapture and re-upload a
+          clearer image.
+        </p>
+        {% else %}
+        <p style="color: #28a745; font-weight: 500; margin-top: 8px">
+          ✅ Confidence is good. Results are quite reliable.
+        </p>
+        {% endif %}
+
+        <div class="image-row">
+          <div class="image-block">
+            <h3>Uploaded Image</h3>
+            <img
+              src="{{ url_for('static', filename='uploads/' + filename) }}"
+              alt="Uploaded Image"
+              class="fade-in-img"
+            />
+          </div>
+          <div class="image-block">
+            <h3>Grad-CAM Visualization</h3>
+            <img
+              src="{{ gradcam }}"
+              alt="Grad-CAM Heatmap"
+              class="fade-in-img gradcam-img"
+            />
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="project-info">
+        <h2>About <strong>OroLight</strong></h2>
+        <p>
+          <strong>OroLight</strong> is a deep learning-powered tool for early
+          detection of oral cancer using histopathological images. It leverages
+          transfer learning and Grad-CAM to provide interpretable predictions.
+        </p>
+        <div class="info-grid">
+          <!-- ... -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const video = document.getElementById("camera-feed");
+      const canvas = document.getElementById("capture-canvas");
+      const captureBtn = document.getElementById("capture-btn");
+      const analyzeForm = document.getElementById("analyze-form");
+      const capturedImageInput = document.getElementById("captured-image");
+      const retakeBtn = document.getElementById("retake-btn");
+      const cameraSection = document.getElementById("camera-section");
+      const cameraButtons = document.getElementById("camera-buttons");
+      const fileInput = document.getElementById("file-input");
+      const predictBtn = document.getElementById("predict-btn");
+
+      // Access camera
+      navigator.mediaDevices
+        .getUserMedia({ video: { facingMode: "environment" }, audio: false })
+        .then((stream) => {
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch((err) => {
+          console.error("Camera access error:", err);
+          alert("Could not access camera. Please enable permissions.");
+        });
+
+      // Capture image from camera
+      captureBtn.addEventListener("click", () => {
+        const context = canvas.getContext("2d");
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Show the captured image and analyze form, hide video and capture button
+        video.style.display = "none";
+        canvas.style.display = "block";
+        cameraButtons.style.display = "none";
+        analyzeForm.style.display = "block";
+
+        // Save captured image as base64 in hidden input
+        const imageData = canvas.toDataURL("image/jpeg", 0.85);
+        capturedImageInput.value = imageData;
+      });
+
+      // Retake image
+      retakeBtn.addEventListener("click", () => {
+        canvas.style.display = "none";
+        video.style.display = "block";
+        cameraButtons.style.display = "block";
+        analyzeForm.style.display = "none";
+        capturedImageInput.value = "";
+      });
+
+      // Enable predict button on file selection
+      fileInput.addEventListener("change", () => {
+        predictBtn.disabled = fileInput.files.length === 0;
+      });
+
+      // Prevent form submit if no file is selected
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", function (e) {
+          if (!fileInput.files.length) {
+            e.preventDefault();
+            alert("Please upload an image before submitting.");
+          }
+        });
+    </script>
+  </body>
+</html>
