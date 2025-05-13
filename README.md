@@ -6,11 +6,11 @@
 
 ## Features
 
-* ✅ Upload and classify oral histopathology images
-* 🧠 Uses **InceptionResNetV2** for high accuracy
-* 🌈 Includes **Grad-CAM** to visualize model attention
-* 💻 Fully styled UI with animations
-* 📈 Training notebook with graphs and metrics
+* Upload and classify oral histopathology images
+* Uses **InceptionResNetV2** for high accuracy
+* Includes **Grad-CAM** to visualize model attention
+* Fully styled UI with animations
+* Training notebook with graphs and metrics
 
 ---
 
@@ -76,44 +76,20 @@ Visit `http://127.0.0.1:5000` in your browser.
 
 ---
 
-## 🖼️ Example Test Images
-
+## Example Test Images
 Inside `Tests/`, you’ll find:
 * `real-test-1.jpg`
 * `real-test-2.jpg`
-These are sample images(taken in Jabalpur Medical College), you can upload via the web app to test the model.
+
+*These are sample images(taken in Jabalpur Medical College), you can upload via the web app to test the model.*
 
 ---
 
-## 📊 Accuracy Visualization
+## Accuracy Visualization
 
 ![Training and Testing Accuracy](./accuracy-pic.jpg)
 *Training and validation accuracy plotted over epochs.*
 
 ---
 
-## 📁 Project Structure
-
-```
-oral_cancer_app/
-├── model/
-│   └── best_model.h5          # ✅ Saved trained model (moved here after training)
-├── static/
-│   ├── gradcam/               # Grad-CAM visualizations
-│   ├── uploads/               # Uploaded images for prediction
-│   ├── device.jpg
-│   ├── heading.png
-│   ├── scripts.js
-│   └── styles.css
-├── templates/
-│   └── index.html             # Main UI
-├── app.py                     # Flask backend
-├── Tests/
-│   ├── real-test-1.jpg
-│   └── real-test-2.jpg
-├── training-and-testing.ipynb # 📓 Training and evaluation notebook
-```
-
----
-
-### 📜 This project was part of EDP (DFP-24).
+###### This project was part of EDP (DFP-24).
